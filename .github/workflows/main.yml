@@ -33,25 +33,33 @@ jobs:
         docker push ${{ secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_IMAGE}}:latest
 
 
-  test: # SAST
-      runs-on: ubuntu-latest
-      needs: [build-job]
-      name: eslint-scan
-      strategy:
-        fail-fast: false
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v3
-        - name: Use Node.js 16
-          uses: actions/setup-node@v3
-          with: 
-            node-version: 16
-        - name: Install dependencies
-          run: npm install
-        - name: Install ESLint and security plugin
-          run: npm install --save-dev eslint eslint-plugin-security
-        - name: Run ESLint scan
-          run: npm run lint
+  test:
+    runs-on: ubuntu-latest
+    needs: [build-job]
+    name: ZAP Security Test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+  
+      - name: Set up ZAP
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-jre
+          wget -q -O - https://github.com/zaproxy/zaproxy/releases/download/v2.11.0/ZAP_2.11.0_Linux.tar.gz | tar -xvzf - -C $HOME
+          export PATH=$HOME/ZAP_2.11.0:$PATH
+  
+      - name: Start ZAP
+        run: zap.sh -daemon -port 8090 -host 0.0.0.0
+  
+      - name: Run ZAP security scan
+        run: zap-cli --zap-url http://localhost:8090 --spider --scan --html report.html --alert-level High --exit
+  
+      - name: Upload ZAP report
+        uses: actions/upload-artifact@v2
+        with:
+          name: zap-report
+          path: report.html
+        
 
   deploy-job:
     runs-on: ubuntu-latest
