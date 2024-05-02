@@ -80,6 +80,5 @@ jobs:
       - name: Expose local server using ngrok
         run: |
           ./ngrok authtoken ${{ secrets.NGROK_AUTHTOKEN}}
-          ./ngrok http --domain=native-anteater-hip.ngrok-free.app 80
-          echo https://native-anteater-hip.ngrok-free.app/
+          ./ngrok http --domain = native-anteater-hip.ngrok-free.app 8080
   
