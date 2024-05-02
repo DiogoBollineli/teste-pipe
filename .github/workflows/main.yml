@@ -74,10 +74,5 @@ jobs:
         run: |
           docker run -d -p 8080:80 ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_IMAGE}}:${{secrets.TAG}}
       - name: Ngrok Tunnel Action
-        uses: LuisBoto/ngrok-tunnel-action@v0.1.7.2
-        with:
-          timeout: 1h
-          port: 8080
-          ngrok_authtoken: ${{ secrets.NGROK_AUTHTOKEN}}
-          tunnel_type: http
-          save_url_to_filename: tunnelURL.md
+        run:
+          docker run --net=host -it ngrok/ngrok http 80
