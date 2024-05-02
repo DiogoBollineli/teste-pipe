@@ -77,10 +77,14 @@ jobs:
           docker run -d -p 8080:80 ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_IMAGE}}:${{secrets.TAG}}
       - name: Install ngrok
         run: |
-          curl -o ngrok.tgz https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
-          tar -x ngrok.tgz
+          curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
+          | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null \
+          && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" \
+          | sudo tee /etc/apt/sources.list.d/ngrok.list \
+          && sudo apt update \
+          && sudo apt install ngrok
       - name: Expose local server using ngrok
         run: |
-          ./ngrok authtoken ${{ secrets.NGROK_AUTHTOKEN}}
-          ./ngrok http http://localhost:8080
+          ngrok authtoken ${{ secrets.NGROK_AUTHTOKEN}}
+          ngrok http http://localhost:8080
   
