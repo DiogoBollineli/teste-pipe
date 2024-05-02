@@ -31,6 +31,8 @@ jobs:
     - name: Push Docker image to registry
       run: |
         docker push ${{ secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_IMAGE}}:latest
+
+
   #security-test: # SAST
   #    runs-on: ubuntu-latest
   #    needs: [build-job]
@@ -80,5 +82,5 @@ jobs:
       - name: Expose local server using ngrok
         run: |
           ./ngrok authtoken ${{ secrets.NGROK_AUTHTOKEN}}
-          ./ngrok http --domain = native-anteater-hip.ngrok-free.app 8080
+          ./ngrok http http://localhost:8080
   
