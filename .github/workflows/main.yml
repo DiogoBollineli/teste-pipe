@@ -72,4 +72,14 @@ jobs:
         run: docker pull ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_IMAGE}}:${{secrets.TAG}}
       - name: Run Docker container 
         run: |
-          docker run  -p 8080:80 ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_IMAGE}}:${{secrets.TAG}}
+          docker run -d -p 8080:80 ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_IMAGE}}:${{secrets.TAG}}
+      - name: Install ngrok
+        run: |
+          curl -o ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+          unzip ngrok.zip
+      - name: Expose local server using ngrok
+        run: |
+          ./ngrok authtoken ${{ secrets.NGROK_AUTHTOKEN}}
+          ./ngrok http --domain=native-anteater-hip.ngrok-free.app 80
+          echo https://native-anteater-hip.ngrok-free.app/
+  
