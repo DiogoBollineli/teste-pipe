@@ -1,0 +1,28 @@
+import React,{Component} from "react";
+import { Link } from "react-router-dom";
+import '../../App.css'
+import ButtonMailto from '../../mailto.js'
+
+class App extends Component{
+
+  render(){
+    return(
+      <div className="container">
+          <h1> Abaixo estão as informações de contato do desenvolvedor</h1>
+          <div>
+            <h3>
+                Diogo Bollineli
+            </h3>
+            <ButtonMailto label="Me mande um email" mailto="mailto:diogobolineli@gmail.com" />
+          </div>
+          <div>
+            <Link to="/Home">
+              <button className="botao">Home</button>
+            </Link>
+          </div>
+      </div>
+    )
+  }
+}
+
+export default App;
