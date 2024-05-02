@@ -85,6 +85,6 @@ jobs:
           && sudo apt install ngrok
       - name: Expose local server using ngrok
         run: |
-          ngrok authtoken ${{ secrets.NGROK_AUTHTOKEN}}
+          ngrok config add-authtoken ${{ secrets.NGROK_AUTHTOKEN}}
           ngrok http http://localhost:8080
   
