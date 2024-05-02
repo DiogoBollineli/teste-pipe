@@ -70,9 +70,6 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Pull Docker image
         run: docker pull ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_IMAGE}}:${{secrets.TAG}}
-      - name: Run Docker container with ngrok
+      - name: Run Docker container 
         run: |
-          docker run -d -p 8080:80 ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_IMAGE}}:${{secrets.TAG}}
-      - name: Ngrok Tunnel Action
-        run:
-          docker run --net=host -it ngrok/ngrok http 80
+          docker run  -p 8080:80 ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_IMAGE}}:${{secrets.TAG}}
