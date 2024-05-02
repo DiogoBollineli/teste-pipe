@@ -51,13 +51,7 @@ jobs:
         - name: Install ESLint and security plugin
           run: npm install --save-dev eslint eslint-plugin-security
         - name: Run ESLint scan
-          run: npm run lint 
-        - name: Upload lint report
-          uses: actions/upload-artifact@v3
-          with:
-            name: lint-report
-            path: lint-report.zip
-            
+          run: npm run lint
 
   deploy-job:
     runs-on: ubuntu-latest
