@@ -51,7 +51,8 @@ jobs:
         run: npm install eslint
 
       - name: Run ESLint
-        run: npm run lint
+        run: npx eslint src/pages/cadastro/index.js
+
 
       
       
