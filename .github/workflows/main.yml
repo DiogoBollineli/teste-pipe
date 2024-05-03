@@ -32,41 +32,37 @@ jobs:
       run: |
         docker push ${{ secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_IMAGE}}:latest
 
-
   test:
     runs-on: ubuntu-latest
-    needs: [build-job]
-    name: ZAP Security Test
+
     services:
       zaproxy:
         image: owasp/zap2docker-stable
-        volumes:
-          - /zap/wrk:/zap/wrk
-          - /zap/.ZAP_D:/zap/.ZAP_D
-          - /zap/wrk/deltas:/zap/wrk/deltas
-          - /zap/wrk/sessions:/zap/wrk/sessions
-        env: # Ensure proper indentation (2 spaces) for each key-value pair
-          - ZAP_PORT=8090
-          - ZAP_API_PORT=8091
+        options: --name zaproxy
+        ports:
+          - 8090:8090
+          - 8091:8091
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-    
+
       - name: Run ZAP security scan
         run: |
-          docker exec zaproxy zap-cli --zap-url http://localhost:8090 --spider --scan --html report.html --alert-level High --exit
-    
+          docker exec zaproxy zap-cli --zap-url http://localhost:8090 --spider --scan --alert-level High --exit
+
       - name: Upload ZAP report
         uses: actions/upload-artifact@v2
         with:
           name: zap-report
           path: report.html
-        
-        
+      
+      
+      
 
   deploy-job:
     runs-on: ubuntu-latest
-    needs: [build-job ,test]
+    needs: [build-job, test]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
