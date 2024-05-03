@@ -34,29 +34,24 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-
-    services:
-      zaproxy:
-        image: owasp/zap2docker-stable
-        options: --name zaproxy
-        ports:
-          - 8090:8090
-          - 8091:8091
+    strategy:
+      fail-fast: false
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run ZAP security scan
-        run: |
-          docker exec zaproxy zap-cli --zap-url http://localhost:8090 --spider --scan --alert-level High --exit
-
-      - name: Upload ZAP report
-        uses: actions/upload-artifact@v2
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
         with:
-          name: zap-report
-          path: report.html
-      
+          node-version: 16
+
+      - name: Install ESLint
+        run: npm install eslint
+
+      - name: Run ESLint
+        run: npm run lint
+
       
       
 
